@@ -32,7 +32,7 @@ This repository is part of the data structure and algorithms (#EDA) teaching fra
 
 The students edit this section to add their names, Uniandes emails, and specify which project functionality of the project they will implement.
 
-1. Simon Peña Alarcon, s.penaa2@uniandes.edu.co, funcion 2   .
+1. Simon Peña Alarcon, s.penaa2@uniandes.edu.co, funcion 2 .
 1. Manuel Santiago Figueroa Gomez, m.figueroag@uniandes.edu.co, funcion 3.
 1. Juan Sebastian Chacon, j.chacono@uniandes.edu.co, funcion 1.
 
