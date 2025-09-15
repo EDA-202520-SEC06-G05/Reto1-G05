@@ -64,7 +64,8 @@ def add_taxi(catalog, taxi):
         taxi["dropoff_latitude"], 
         taxi["payment_type"],
         taxi["fare_amount"], 
-        taxi["extra"], taxi["mta_tax"],
+        taxi["extra"], 
+        taxi["mta_tax"],
         taxi["tip_amount"], 
         taxi["tolls_amount"], 
         taxi["improvement_surcharge"],
@@ -135,10 +136,88 @@ def req_2(catalog):
     pass
 
 
-def req_3(catalog):
+def req_3(catalog,valor_menor, valor_mayor):
     """
     Retorna el resultado del requerimiento 3
     """
+    time_start = get_time()
+    
+    contador = {
+        "tiempo_ejecucion": 0,
+        "numero_viajes": 0,
+        "tiempo_promedio":0,
+        "precio_promedio_usd":0,
+        "disatancia_total_promedio":0,
+        "precio_peaje_promedio": 0,
+        "cantidad_pasajeros_frecuente" : {},
+        "cantidad_propinas_promedio": 0,
+        "fecha_promedio": {}
+        }
+    
+    for taxi in catalog["taxis_info"]:
+        lista = []
+        if float(taxi["total_amount"]) > 5 and float(taxi):
+            contador["numero_viajes"] +=1
+            lista = [taxi["pickup_datetime"], taxi["dropoff_datetime"]]
+            hora, minuto , segundo = lista[0][10:].split(":")
+            if int(segundo) % 60 == 0:
+                segundo = 1
+            else:
+                segundo = 0
+            hora_inicial = int(hora) *60 + int(minuto) + int (segundo)
+            
+            hora_final, minuto_final, segundo_final = lista[1][10:].split(":")
+            if int(segundo_final) % 60 == 0:
+                segundo_final = 1
+            else:
+                segundo_final = 0
+                
+            hora_termino = int(hora_final) *60 + int(minuto_final) + int (segundo_final)
+            tiempo_viaje_total = hora_termino - hora_inicial
+            contador["tiempo_promedio"] += tiempo_viaje_total
+            
+            if taxi["passenger_count"] in contador["cantidad_pasajeros_frecuente"]:
+                contador["cantidad_pasajeros_frecuente"][taxi["passenger_count"]] += 1
+            else:
+                contador["cantidad_pasajeros_frecuente"][taxi["passenger_count"]] = 1
+            
+            if lista[:10] in contador["fecha_promedio"]:
+                contador["fecha_promedio"] += 1
+            else:
+                contador["cantidad_pasajeros"][lista[:10]] = 1
+                
+            contador["precio_promedio_usd"] += float(taxi["total_amount"])
+            contador["disatancia_total_promedio"] += float(taxi["trip_distance"])
+            contador["precio_peaje_promedio"] += float(taxi["tolls_amount"])
+            contador["cantidad_propinas_promedio"] += float(taxi["tip_amount"])
+            
+    contador["tiempo_promedio"] = contador["tiempo_promedio"]/contador["numero_viajes"]
+    contador["precio_promedio_usd"] = contador["precio_promedio_usd"]/contador["numero_viajes"]
+    contador["disatancia_total_promedio"] = contador["disatancia_total_promedio"]/contador["numero_viajes"]
+    contador["precio_peaje_promedio"] = contador["precio_peaje_promedio"]/contador["numero_viajes"]
+    contador["cantidad_propinas_promedio"] = contador["cantidad_propinas_promedio"]/contador["numero_viajes"]
+    
+    fecha_promedio = list(contador["fecha_promedio"].values())
+    fecha_promedio = max(fecha_promedio)
+    for fecha in contador["fecha_promedio"]:
+        if contador["fecha_promedio"][fecha] == fecha_promedio:
+            contador["fecha_promedio"] = fecha
+            break
+    
+    cantidad_pasajeros= list(contador["cantidad_pasajeros_frecuente"].values())
+    cantidad_pasajeros = max(cantidad_pasajeros)
+    for cantidad in contador["cantidad_pasajeros_frecuente"]:
+        if contador["cantidad_pasajeros_frecuentes"][cantidad] == cantidad_pasajeros:
+            contador["cantidad_pasajeros_frecuente"] = (cantidad, cantidad_pasajeros)
+            break
+    time_end = get_time()
+    time_total = delta_time(time_start, time_end)
+    contador["tiempo_ejecucion"] = time_total
+    
+    return contador 
+    
+    
+    
     # TODO: Modificar el requerimiento 3
     pass
 
@@ -197,3 +276,5 @@ def delta_time(start, end):
     """
     elapsed = float(end - start)
     return elapsed
+
+
