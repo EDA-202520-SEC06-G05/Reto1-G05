@@ -106,7 +106,7 @@ def print_req_8(control):
 
 
 # Se crea la lógica asociado a la vista
-control = new_logic()
+control = new_logic(data_structure)
 
 # main del ejercicio
 def main():

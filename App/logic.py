@@ -21,7 +21,7 @@ def new_logic(data_structure):
 
 # Funciones para la carga de datos
 
-def load_data(catalog, filename):
+def load_data(catalog):
     """
     Carga los datos del reto
     """
