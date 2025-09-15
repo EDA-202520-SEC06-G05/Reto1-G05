@@ -156,17 +156,17 @@ def req_3(catalog,valor_menor, valor_mayor):
     
     for taxi in catalog["taxis_info"]:
         lista = []
-        if float(taxi["total_amount"]) > 5 and float(taxi):
+        if (float(taxi["total_amount"])) > valor_menor and (float(taxi["total_amount"])) < valor_mayor:
             contador["numero_viajes"] +=1
             lista = [taxi["pickup_datetime"], taxi["dropoff_datetime"]]
-            hora, minuto , segundo = lista[0][10:].split(":")
+            hora, minuto , segundo = lista[0][11:].split(":")
             if int(segundo) % 60 == 0:
                 segundo = 1
             else:
                 segundo = 0
             hora_inicial = int(hora) *60 + int(minuto) + int (segundo)
             
-            hora_final, minuto_final, segundo_final = lista[1][10:].split(":")
+            hora_final, minuto_final, segundo_final = lista[1][11:].split(":")
             if int(segundo_final) % 60 == 0:
                 segundo_final = 1
             else:
@@ -184,7 +184,7 @@ def req_3(catalog,valor_menor, valor_mayor):
             if lista[:10] in contador["fecha_promedio"]:
                 contador["fecha_promedio"] += 1
             else:
-                contador["cantidad_pasajeros"][lista[:10]] = 1
+                contador["fecha_promedio"][lista[:10]] = 1
                 
             contador["precio_promedio_usd"] += float(taxi["total_amount"])
             contador["disatancia_total_promedio"] += float(taxi["trip_distance"])
