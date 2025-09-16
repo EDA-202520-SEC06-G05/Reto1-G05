@@ -2,7 +2,7 @@ import time
 import csv
 import os
 from DataStructures.List import array_list as lt
-
+import math
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/Challenge-1'
 
@@ -66,7 +66,7 @@ def load_taxis(catalog):
         h2str, m2str = finish.split(":")
         
         h1, m1 = int(h1str), int(m1str)
-        h2, m2 = int(h2str), int(h2str)
+        h2, m2 = int(h2str), int(m2str)
         
         duration = (h2 *60 + m2) - (h1 *60 + m1)
         if duration < 0:
@@ -276,10 +276,11 @@ def req_1(catalog, pasajeros):
     return resultado
 
     # TODO: Modificar el requerimiento 1
+    pass
 
-def req_2(catalog):
-    
-    filtro = "CREDIT_CARD"
+
+def req_2(catalog, filtro):
+
     contador = 0
     duration = 0
     total_costs = 0
@@ -367,6 +368,12 @@ def req_3(catalog,valor_menor, valor_mayor):
     """
     Retorna el resultado del requerimiento 3
     """
+    
+    
+    
+    
+    
+    
     time_start = get_time()
     
     contador = {
@@ -437,52 +444,94 @@ def req_3(catalog,valor_menor, valor_mayor):
     
     return contador 
     # TODO: Modificar el requerimiento 3
+    pass
 
-
-
-def req_4(catalog, fecha_inicio, fecha_final, filtro3):
+def harvesine_miles(lat1, lon1, lat2, lon2):
+    R = 3958.8
+    lat1 = lat1 * math.pi / 180
+    lon1 = lon1 * math.pi / 180
+    lat2 = lat2 * math.pi / 180
+    lon2 = lon2 * math.pi / 180
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = (math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2) **2)
+    c = 2 * math.asin(math.sqrt(a))
+    return R * c
+    
+def req_4(catalog):
     """
     Retorna el resultado del requerimiento 4
     """
-    catologo = {
-        "filtro": 0,
-        "numero_total_viajes": 0,
-        "barrios_frecuentes": {},
-    }
-    barrios = {
-        
-    }
-    for i in range(1, lt.size(catalog["Neighborhoods"])+1):
-        linea = lt.get_element(catalog["Neighborhoods"], i)
-        if linea["borough"] in barrios:
-            valor= {str(linea["neighborhood"]): linea["neighborhood"],
-                                         str(linea["latitude"]): linea["latitude"],
-                                         str(linea["longitude"]) : linea["longitude"]
-                                         }
-            barrios[linea["borough"]] = lt.add_last(barrios[linea["borough"]], valor)
-        else:
-            barrios[linea["borough"]] = lt.new_list()
-            valor= {str(linea["neighborhood"]): linea["neighborhood"],
-                                         str(linea["latitude"]): linea["latitude"],
-                                         str(linea["longitude"]) : linea["longitude"]
-                                         }
-            barrios[linea["borough"]] = lt.add_last(barrios[linea["borough"]], valor)
-    
-    for taxi in catalog["taxis_info"]:
-        fecha = taxi["pickup_datetime"]
-        fecha = fecha[:11]
-        if fecha < fecha_final or fecha > fecha_inicio:
-            catologo["numero_total_viajes"] +=1
-            
-            
     # TODO: Modificar el requerimiento 4
     pass
 
 
-def req_5(catalog):
+def req_5(catalog, filter, fecha_ini, fecha_fin):
     """
     Retorna el resultado del requerimiento 5
     """
+    inicio = get_time()
+    hours = {}
+    total_filtered = 0
+    
+    for i in range(1, lt.size(catalog["taxis_info"])+1):
+        trip = lt.get_element(catalog["taxis_info"], i)
+        
+        pickup = trip["pickup_datetime"]
+        dropoff = trip["dropoff_datetime"]
+        fecha = pickup[:10]
+        
+        if fecha_ini <= fecha <= fecha_fin:
+            total_filtered += 1
+
+            h_initial = int(pickup[11:13])
+            
+            start = pickup[11:16]
+            finish = dropoff[11:16]
+            h1, m1 = start.split(":")
+            h2, m2 = finish.split(":")
+            h1, m1, h2, m2 = int(h1), int(m1), int(h2), int(m2)
+            duration = (h2*60+m2) - (h1*60+m2)
+            if duration < 0:
+                duration += 24*60
+            
+            cost = float(trip["total_amount"])
+            passengers = int(trip["passenger_count"])
+            
+            if h_initial not in hours:
+                hours[h_initial] = {
+                    "count": 0, "sum_cost":0, "sum_dur": 0, "sum_pass": 0, "max_cost":cost,
+                    "min_cost": cost                    
+                }
+            hours[h_initial]["count"] += 1
+            hours[h_initial]["sum_cost"] += cost
+            hours[h_initial]["sum_dur"] += duration
+            hours[h_initial]["sum_pass"] += passengers
+            
+            if cost > hours[h_initial]["max_cost"]:
+                hours[h_initial]["max_cost"] = cost
+            if cost < hours[h_initial]["min_cost"]:
+                hours[h_initial]["min_cost"] = cost
+    
+    chosed_h = None
+    chosed_prom = None
+    
+    for h_initial in hours:
+        prom = hours[h_initial]["sum_cost"] / hours[h_initial]["count"]
+        if chosed_h is None:
+            chosed_h = h_initial
+            chosed_prom = prom
+        else:
+            if (filter == "MAYOR" and prom > chosed_prom) or (filter == "MENOR" and prom < chosed_prom):
+                chosed_h = h_initial
+                chosed_prom = prom
+    
+    fin = get_time()    
+    
+    
+    
+    
+    
     # TODO: Modificar el requerimiento 5
     pass
 
