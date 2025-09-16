@@ -82,7 +82,7 @@ def new_neigh(borough, neighbor, lat, longi):
     return neigh
 
 def new_taxi_info(pickup, dropoff, passenger_count, trip_dist, 
-                  pickup_longitude, pickup_latitude, rate_code, drop_long, drop_lat, payment, fare, extra, mta_tax, tip, tolls, improve, total):
+                pickup_longitude, pickup_latitude, rate_code, drop_long, drop_lat, payment, fare, extra, mta_tax, tip, tolls, improve, total):
     
     taxi_info = {"pickup_datetime":pickup, 
         "dropoff_datetime":dropoff, 
