@@ -51,7 +51,7 @@ def load_taxis(catalog):
     first5 = lt.new_list()
     last5 = lt.new_list()
     
-    taxi_file = data_dir + "/taxis-small.csv"
+    taxi_file = data_dir + "/taxis-large.csv"
     input_file = csv.DictReader(open(taxi_file, encoding="utf-8"), delimiter=",")
     for taxi in input_file:
         add_taxi(catalog, taxi)
@@ -459,10 +459,43 @@ def harvesine_miles(lat1, lon1, lat2, lon2):
     return R * c
    
     
-def req_4(catalog):
+def req_4(catalog, fecha_ini, fecha_fin, filtro):
     """
     Retorna el resultado del requerimiento 4
     """
+    inicio = get_time()
+    
+    barrios = lt.new_list()
+    for i in range(1, lt.size(catalog["Neighborhoods"])+1):
+        b = lt.get_element(catalog["Neighborhoods"], i)
+        barrio = {
+            "name": b["neighborhood"],
+            "lat": float(b["latitude"]),
+            "lon": float(b["longitude"])
+        }
+        lt.add_last(barrios, barrio)
+        
+    total_filtrados = 0
+    
+    for j in range(1, lt.size(catalog["taxis_info"])+1):
+        trip = lt.get_element(catalog["taxis_info"], j)
+        
+        pickup = trip["pickup_datetime"]
+        dropoff = trip["dropoff_datetime"]
+        fecha = pickup[0:10]
+        
+        if fecha_ini <= fecha <= fecha_fin:
+            total_filtrados += 1
+
+            lat1 = float(trip["pickup_latitude"])
+            lon1 = float(trip["pickup_longitude"])
+            lat2 = float(trip["dropoff_latitude"])
+            lon2 = float(trip["pickup_longitude"])
+            
+            
+            
+            
+            
     
     
     
@@ -538,7 +571,20 @@ def req_5(catalog, filter, fecha_ini, fecha_fin):
     
     fin = get_time()    
     
+    stats = hours[chosed_h]
+    count = stats["count"]
     
+    return {
+        "tiempo_ms": fin-inicio,
+        "total_trayectos_filtrados": total_filtered,
+        "franja_horaria": "["+str(chosed_h) + "-" +str(chosed_h+1) +")",
+        "costo_promedio": stats["sum_cost"] / count,
+        "numero_trayectos": count,
+        "duracion_promedio": stats["sum_dur"] / count,
+        "pasajeros_promedio": stats["sum_pass"] / count,
+        "costo_mayor": stats["max_cost"],
+        "costo_menor": stats["min_cost"]
+    }
     
     
     
