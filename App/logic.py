@@ -440,10 +440,41 @@ def req_3(catalog,valor_menor, valor_mayor):
 
 
 
-def req_4(catalog, filtro1, filtro2, filtro3):
+def req_4(catalog, fecha_inicio, fecha_final, filtro3):
     """
     Retorna el resultado del requerimiento 4
     """
+    catologo = {
+        "filtro": 0,
+        "numero_total_viajes": 0,
+        "barrios_frecuentes": {},
+    }
+    barrios = {
+        
+    }
+    for i in range(1, lt.size(catalog["Neighborhoods"])+1):
+        linea = lt.get_element(catalog["Neighborhoods"], i)
+        if linea["borough"] in barrios:
+            valor= {str(linea["neighborhood"]): linea["neighborhood"],
+                                         str(linea["latitude"]): linea["latitude"],
+                                         str(linea["longitude"]) : linea["longitude"]
+                                         }
+            barrios[linea["borough"]] = lt.add_last(barrios[linea["borough"]], valor)
+        else:
+            barrios[linea["borough"]] = lt.new_list()
+            valor= {str(linea["neighborhood"]): linea["neighborhood"],
+                                         str(linea["latitude"]): linea["latitude"],
+                                         str(linea["longitude"]) : linea["longitude"]
+                                         }
+            barrios[linea["borough"]] = lt.add_last(barrios[linea["borough"]], valor)
+    
+    for taxi in catalog["taxis_info"]:
+        fecha = taxi["pickup_datetime"]
+        fecha = fecha[:11]
+        if fecha < fecha_final or fecha > fecha_inicio:
+            catologo["numero_total_viajes"] +=1
+            
+            
     # TODO: Modificar el requerimiento 4
     pass
 
