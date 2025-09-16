@@ -17,6 +17,7 @@ def new_logic():
     catalog["taxis_info"] = lt.new_list()
     return catalog
     #TODO: Llama a las funciónes de creación de las estructuras de datos
+    pass
 
 
 # Funciones para la carga de datos
@@ -114,17 +115,104 @@ def get_data(catalog, id):
     """
     Retorna un dato por su ID.
     """
-    
-    #TODO: Consulta en las Llamar la función del modelo para obtener un dato
+        #TODO: Consulta en las Llamar la función del modelo para obtener un dato
     pass
 
 
-def req_1(catalog):
+def req_1(catalog, pasajeros):
     """
     Retorna el resultado del requerimiento 1
     """
+
+    start_time = get_time() 
+    contador=0
+    sumatoria_duracion=0
+    sumatoria_costo_total=0
+    sumatoria_distancia=0
+    sumatoria_peajes=0
+    sumatoria_propinas=0
+    conteo_metodos_pago={}
+    conteo_fechas_inicio={}
+
+    for viaje in catalog["taxis_info"]:
+        if viaje["passenger_count"]!="" and int(float(viaje["passenger_count"]))== pasajeros:
+            contador+=1
+            pickup= viaje["pickup_datetime"]
+            dropoff= viaje["dropoff_datetime"]
+            start= pickup[11:16]
+            finish= dropoff[11:16]
+            h1str,m1str= start.split(":")
+            h2str,m2str=finish.split(":")
+            h1,m1= int(h1str),int(m1str)
+            h2,m2=int(h2str),int(m2str)
+            duracion_sum= (h2*60+m2)-(h1*60+m1)
+            if duracion_sum<0:
+                duracion_sum+=24*60
+            sumatoria_duracion += duracion_sum
+
+            sumatoria_costo_total+= float(viaje["total_amount"])
+            sumatoria_distancia+= float(viaje["trip_distance"])
+            sumatoria_peajes+= float(viaje["tolls_amount"])
+            sumatoria_propinas+= float(viaje["tip_amount"])
+
+            metodo_pago=viaje["payment_type"]
+            if metodo_pago in conteo_metodos_pago:
+                conteo_metodos_pago[metodo_pago]+=1
+            else:
+                conteo_metodos_pago[metodo_pago]=1
+
+            fecha=pickup[0:10] 
+            if fecha in conteo_fechas_inicio:
+                conteo_fechas_inicio[fecha]+=1
+            else:
+                conteo_fechas_inicio[fecha]=1
+    if contador>0:
+        duracion=sumatoria_duracion/contador
+        costo_total=sumatoria_costo_total/contador
+        distancia=sumatoria_distancia/contador
+        peajes=sumatoria_peajes/contador
+        propina=sumatoria_propinas/contador
+    else:
+        duracion=costo_total=distancia=peajes=propina=0
+    metodo_frec=None
+    cantidad_maxima=-1
+    for metodo in conteo_metodos_pago:
+        cantidad =conteo_metodos_pago[metodo]
+        if cantidad >cantidad_maxima:
+            cantidad_maxima=cantidad
+            metodo_frec=str(metodo)+" - "+str(cantidad)
+    fecha_frec=None
+    max_fecha=-1
+    for fecha in conteo_fechas_inicio:
+        cantidad=conteo_fechas_inicio[fecha]
+        if cantidad>max_fecha:
+            max_fecha=cantidad
+            fecha_frec=fecha
+    end_time = get_time()  
+    tiempo_ms = delta_time(start_time, end_time)        
+    resultado={
+        "tiempo_ejecucion_ms":tiempo_ms,
+        "total_trayectos":contador,
+        "duracion_promedio(min)":duracion,
+        "costo_total_promedio":costo_total,
+        "distancia_promedio_millas":distancia,
+        "peajes_promedio":peajes,
+        "metodo_pago_mas_usado":metodo_frec,
+        "propina_promedio":propina,
+        "fecha_inicio_mas_frecuente":fecha_frec
+    }
+    return resultado
+
     # TODO: Modificar el requerimiento 1
-    pass
+        
+
+                 
+    
+    
+
+        
+    
+    
 
 
 def req_2(catalog):
@@ -133,6 +221,7 @@ def req_2(catalog):
     """
     # TODO: Modificar el requerimiento 2
     pass
+    
 
 
 def req_3(catalog):
@@ -143,10 +232,21 @@ def req_3(catalog):
     pass
 
 
-def req_4(catalog):
+def req_4(catalog, filtro, fecha_inicio, fecha_final):
+
     """
     Retorna el resultado del requerimiento 4
     """
+    tiempo_inicial = get_time()
+    contador = {
+        "tiempo" : 0,
+        "filtro" : 0,
+        "trayectos_totales" : 0,
+        "barrios": {}
+    }
+    
+    
+
     # TODO: Modificar el requerimiento 4
     pass
 
