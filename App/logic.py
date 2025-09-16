@@ -131,8 +131,11 @@ def add_taxi(catalog, taxi):
     return catalog
     
 def new_neigh(borough, neighbor, lat, longi):
-    neigh = {"borough":borough, "neighborhood":neighbor, 
-             "latitude":lat, "longitude": longi}
+    neigh = {"borough":borough, 
+            "neighborhood":neighbor, 
+            "latitude":lat, 
+            "longitude": longi}
+    
     return neigh
 
 def new_taxi_info(pickup, dropoff, passenger_count, trip_dist, 
@@ -250,7 +253,7 @@ def req_2(catalog):
     """
     Retorna el resultado del requerimiento 2
     """   
- # TODO: Modificar el requerimiento 2
+# TODO: Modificar el requerimiento 2
 
 
 
