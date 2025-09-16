@@ -34,21 +34,93 @@ def load_data(catalog):
 
 def load_neigh(catalog):
     neigh_file = data_dir + "/nyc-neighborhoods.csv"
-    input_file = csv.DictReader(open(neigh_file, encoding="utf-8"))
+    input_file = csv.DictReader(open(neigh_file, encoding="utf-8"), delimiter=";")
     for neigh in input_file:
         add_neigh(catalog, neigh)
     return neigh_size(catalog)
 
 def load_taxis(catalog):
+    
+    inicio = get_time()
+    
+    trip_total = 0
+    min_trip = None
+    max_trip = None
+    
+    first5 = lt.new_list()
+    last5 = lt.new_list()
+    
     taxi_file = data_dir + "/taxis-small.csv"
-    input_file = csv.DictReader(open(taxi_file, encoding="utf-8"))
+    input_file = csv.DictReader(open(taxi_file, encoding="utf-8"), delimiter=",")
     for taxi in input_file:
         add_taxi(catalog, taxi)
-    return taxi_size(catalog)
+        trip_total += 1
+        
+        pick_up = taxi["pickup_datetime"]
+        dropoff = taxi["dropoff_datetime"]
+        start = pick_up[11:16]
+        finish = dropoff[11:16]
+        
+        h1str, m1str = start.split(":")
+        h2str, m2str = finish.split(":")
+        
+        h1, m1 = int(h1str), int(m1str)
+        h2, m2 = int(h2str), int(h2str)
+        
+        duration = (h2 *60 + m2) - (h1 *60 + m1)
+        if duration < 0:
+            duration += 24*60
+        
+        distance = float(taxi["trip_distance"])
+        cost = float(taxi["total_amount"])
+        
+        register = {
+            "pickup_datetime": pick_up,
+            "dropoff_datetime": dropoff,
+            "duration_min": duration,
+            "distance": distance,
+            "cost": cost    
+        }
+        
+        if lt.size(first5) < 5:
+            lt.add_last(first5, register)
+        
+        lt.add_last(last5, register)
+        if lt.size(last5) > 5:
+            lt.remove_first(last5)
+        
+        if distance > 0:
+            if min_trip is None or distance < min_trip["distancia"]:
+                min_trip = {
+                    "pickup_datetime": pick_up,
+                    "distancia": distance,
+                    "cost": cost
+                }
+        if max_trip is None or distance > max_trip["distancia"]:
+            max_trip = {
+                "pickup_datetime": pick_up,
+                "distancia": distance,
+                "cost": cost
+            }
+    fin = get_time()
+    result = {
+        "tiempo_carga_ms": float(fin) - float(inicio),
+        "total_trayectos": trip_total,
+        "trayecto_min": min_trip,
+        "trayecto_max": max_trip,
+        "primeros5": first5,
+        "ultimos5": last5
+    }
+    return result    
 
 def add_neigh(catalog, neigh):
-    n = new_neigh(neigh["borough"], neigh["neighborhood"], neigh["latitude"], neigh["longitude"])
-    lt.add_last(catalog["neighboorhoods"], n)
+    n = new_neigh(
+        neigh["borough"],
+        neigh["neighborhood"],
+        neigh["latitude"],
+        neigh["longitude"]
+        )
+    lt.add_last(catalog["Neighborhoods"], n)
     return catalog
 
 def add_taxi(catalog, taxi):
