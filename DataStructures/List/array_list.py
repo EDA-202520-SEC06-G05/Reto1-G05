@@ -19,7 +19,7 @@ def add_last(my_list, element):
 
 def get_element(my_list,index):
     if index < 0 or index >= my_list["size"]:
-        return "IndexError: list index out of range"
+        raise IndexError( "list index out of range")
     else:
         return my_list["elements"][index]
 

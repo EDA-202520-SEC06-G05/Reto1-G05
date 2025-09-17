@@ -45,18 +45,21 @@ def print_req_1(control):
         Función que imprime la solución del Requerimiento 1 en consola
     
     """
-    
+    pasajeros = int(input("Por favor ingrese la cantidad de pasajeros:"))
+    result = logic.req_1(control, pasajeros)
+    return print(result)
     # TODO: Imprimir el resultado del requerimiento 1
-    pass
+
 
 
 def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    
+    metodo_p = str(input("Ingrese el metodo de pago:"))
+    result = logic.req_2(control, metodo_p)
+    return print(result)
     # TODO: Imprimir el resultado del requerimiento 2
-    pass
 
 
 def print_req_3(control):
@@ -79,8 +82,12 @@ def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
+    filtro = str(input("Por favor ingrese la seleccion de costo: "))
+    fecha_ini = str(input("Ahora ingrese la fecha Inicial (Debe estar en formato %Y-%m-%d): "))
+    fecha_fin = str(input("Ahora ingrese la fecha final (Debe estar en formato %Y-%m-%d): "))
+    resultado = logic.req_5(control,filtro,fecha_ini,fecha_fin)
+    return print(resultado)
     # TODO: Imprimir el resultado del requerimiento 5
-    pass
 
 
 def print_req_6(control):
