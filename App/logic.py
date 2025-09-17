@@ -578,8 +578,6 @@ def req_4(catalog, fecha_ini, fecha_fin, filtro):
                     lista_inicio.append((each["neighborhood"], distancia))
                     ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
                     lista_final.append((each["neighborhood"], ditancia_llegada))
-            if len(lista_inicio) == 0 or len(lista_final) == 0:
-                continue
             menor = lista_inicio[0]     
             p = 1
             while p < len(lista_inicio):
@@ -868,15 +866,16 @@ def req_6(catalog, fecha_ini, fecha_fin, barrio):
                         "medio": llave 
                     }
                 
+
+    
     #Arregla la busqueda del barrio con mayor suma 
-    frecuente = 0 
-    if not diccionario2:
-        diccionario["nombre_barrio_final"] = None
-    else:
-        frecuente = None  # guardará el dict {"suma": X, "barrio": "Nombre"}
-        for _, data in diccionario2.items():
-            if frecuente is None or data["suma"] > frecuente["suma"]:
-                frecuente = data
+    frecuente = {"suma":0, "barrio":""}
+    for i in diccionario2: 
+        if frecuente == 0: 
+            frecuente = diccionario2[i] 
+        else: 
+            if diccionario2[i]["suma"] > frecuente["suma"]:
+                frecuente = diccionario2[i] 
     diccionario["nombre_barrio_final"] = frecuente["barrio"]
     
     diccionario["distancia_promedio"] = diccionario["distancia_promedio"] / diccionario["numero_viajes_totales"]
