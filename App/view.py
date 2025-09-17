@@ -103,6 +103,11 @@ def print_req_6(control):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
+    barrio = str(input("Por favor ingrese el barrio de inicio:"))
+    fecha_ini = str(input("Ahora ingrese la fecha Inicial (Debe estar en formato %Y-%m-%d): "))
+    fecha_fin = str(input("Ahora ingrese la fecha final (Debe estar en formato %Y-%m-%d): "))
+    resultado = logic.req_6(control,fecha_ini,fecha_fin,barrio)
+    return print (resultado)
     # TODO: Imprimir el resultado del requerimiento 6
     pass
 

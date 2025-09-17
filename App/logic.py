@@ -738,91 +738,167 @@ def req_6(catalog, fecha_ini, fecha_fin, barrio):
     """
     Retorna el resultado del requerimiento 6
     """
-    tiempo_inicio = get_time()
-    catalogo = {
-        "tiempo_ejecucion":0,
-        "numero_viajes_total":0,
-        "distancia_total_promedio":0,
-        "tiempo_duracion_promedio":0,
-        "nombre_barrio_final_mas_frecuente":{},
-        "medios_de_pago": {}
+    tiempo_inicial = get_time()
+    diccionario = {
+        "tiempo_ejecucion" : 0,
+        "numero_viajes_totales":0,
+        "distancia_promedio" : 0,
+        "tiempo_promedio" : 0,
+        "nombre_barrio_final": 0,
+        "medios_de_pago" : {}
+    }
+    barrios_filtrados = barrios(catalog)
+    diccionario2 = {
+        
     }
     
-    barrios = lt.new_list
-    for each in catalog["Neighborhoods"]:
-        sub_barrios = {
-            "neighborhood": each["neighborhood"],
-            "latitude": each["latitude"],
-            "longitude": each["longitude"]
-        }
-        lt.add_last(barrios, sub_barrios)
-        
-    for each in catalog["taxis_info"]:
-        inicial = each["pickup_datetime"]
-        fecha_inicial = inicial[:10]
+    for i in catalog["taxis_info"]["elements"]:
+        lista_inicio = []
+        lista_final = []
+        fecha_inicial = i["pickup_datetime"]
+        fecha_inicial = fecha_inicial[:10]
         if fecha_ini <= fecha_inicial <= fecha_fin:
-            catalogo["numero_viajes_total"] += 1
-            lt1 = float(each["pickup_latitude"])
-            lo1 = float(each["pickup_longitude"])
-            lt2 = float(each["dropoff_latitude"])
-            lo2 = float(each["dropoff_longitude"])
-            barrio_inicial = None
-            barrio_final = None
-            contador = 0
-            mayor_inidice_inical = 0
-            mayor_indice_final = 0
-            while contador < lt.size(barrios):
-                longitud_barrio = barrios[contador]["longitud"]
-                latitud_barrio = barrios[contador]["latitud"]
-                distancia_inicial = harvesine_miles(lt1, lo1, float(latitud_barrio), float(longitud_barrio))
-                distancia_final = harvesine_miles(lt2, lo2, float(latitud_barrio), float(longitud_barrio))
-                if distancia_inicial <= barrio_inicial:
-                    barrio_inicial = distancia_inicial
-                    mayor_indice_iniical = contador
-                if distancia_final <= barrio_final:
-                    barrio_final = distancia_final
-                    mayor_indice_final = contador
-                contador += 1
-            barrio_inicial = barrios[mayor_inidice_inical]["neighborhood"]
-            if barrio_inicial != barrio:
-                None
+            diccionario["numero_viajes_totales"] +=1
+            diccionario["distancia_promedio"] += float(i["trip_distance"].replace(",", "."))
+            tiempo = i["dropoff_datetime"]
+            tiempo = tiempo[11:]
+            tiempo = tiempo.split(":")
+            hora, minuto, segundo = int(tiempo[0]), int(tiempo[1]), int(tiempo[2])
+            minutos_totales = hora * 60 + minuto + (segundo / 60)
+            diccionario["tiempo_promedio"] += minutos_totales
+            latitud = float(i["pickup_latitude"].replace(",", "."))
+            longitud = float(i["pickup_longitude"].replace(",", "."))
+            if barrios_filtrados["Manhattan"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Manhattan"]["elements"][0]["east"] and barrios_filtrados["Manhattan"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Manhattan"]["elements"][0]["north"]:
+                for each in barrios_filtrados["Manhattan"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
+                    latitud_llegada = float(i["dropoff_latitude"].replace(",", "."))
+                    longitud_llegada = float(i["dropoff_longitude"].replace(",", "."))
+                    distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
+                    lista_inicio.append((each["neighborhood"], distancia))
+                    ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
+                    lista_final.append((each["neighborhood"], ditancia_llegada))
+            elif barrios_filtrados["Brooklyn"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Brooklyn"]["elements"][0]["east"] and barrios_filtrados["Brooklyn"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Brooklyn"]["elements"][0]["north"]:
+                for each in barrios_filtrados["Brooklyn"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
+                    latitud_llegada = float(i["dropoff_latitude"].replace(",", "."))
+                    longitud_llegada = float(i["dropoff_longitude"].replace(",", "."))
+                    distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
+                    lista_inicio.append((each["neighborhood"], distancia))
+                    ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
+                    lista_final.append((each["neighborhood"], ditancia_llegada))
+            elif barrios_filtrados["Queens"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Queens"]["elements"][0]["east"] and barrios_filtrados["Queens"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Queens"]["elements"][0]["north"]:
+                for each in barrios_filtrados["Queens"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
+                    latitud_llegada = float(i["dropoff_latitude"].replace(",", "."))
+                    longitud_llegada = float(i["dropoff_longitude"].replace(",", "."))
+                    distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
+                    lista_inicio.append((each["neighborhood"], distancia))
+                    ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
+                    lista_final.append((each["neighborhood"], ditancia_llegada))
+            elif barrios_filtrados["Bronx"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Bronx"]["elements"][0]["east"] and barrios_filtrados["Bronx"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Bronx"]["elements"][0]["north"]:
+                for each in barrios_filtrados["Bronx"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
+                    latitud_llegada = float(i["dropoff_latitude"].replace(",", "."))
+                    longitud_llegada = float(i["dropoff_longitude"].replace(",", "."))
+                    distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
+                    lista_inicio.append((each["neighborhood"], distancia))
+                    ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
+                    lista_final.append((each["neighborhood"], ditancia_llegada))
+            elif barrios_filtrados["Staten Island"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Staten Island"]["elements"][0]["east"] and barrios_filtrados["Staten Island"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Staten Island"]["elements"][0]["north"]:
+                for each in barrios_filtrados["Staten Island"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
+                    latitud_llegada = float(i["dropoff_latitude"].replace(",", "."))
+                    longitud_llegada = float(i["dropoff_longitude"].replace(",", "."))
+                    distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
+                    lista_inicio.append((each["neighborhood"], distancia))
+                    ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
+                    lista_final.append((each["neighborhood"], ditancia_llegada))
+            if len(lista_inicio) == 0 or len(lista_final) == 0:
+                continue
+            menor = lista_inicio[0]     
+            p = 1
+            while p < len(lista_inicio):
+                if lista_inicio[p][1] < menor[1]:
+                    menor = lista_inicio[p]
+                p += 1
+            barrio_inicio = menor[0]
+            menor_1 = lista_final[0]
+            if barrio_inicio == barrio:
+                menor_1 = lista_final[0]
+                j = 1
+                while j < len(lista_final):
+                    if lista_final[j][1] < menor_1[1]:
+                        menor_1 = lista_final[j]
+                    j += 1
+            barrio_final = menor_1[0]
+            if barrio_final in diccionario2:
+                diccionario2[barrio_final]["suma"] += 1
+                    
             else:
-                barrio_final = barrios[mayor_indice_final]["neighborhood"]
-                if barrio_final in catalogo["nombre_barrio_final_mas_frecuente"]:
-                    catalogo["nombre_barrio_final_mas_frecuente"][barrio_final] += 1
-                else:
-                    catalogo["nombre_barrio_final_mas_frecuente"][barrio_final] = 1
-                if each["payment_type"] in catalogo["medios_de_pago"]:
-                    catalogo["medios_de_pago"][each["payment_type"]] += 1
-                    lista = [each["pickup_datetime"], each["dropoff_datetime"]]
-                    hora, minuto , segundo = lista[0][11:].split(":")
-                    hora_inicial = int(hora) *60 + int(minuto) + (int (segundo) / 60)
-                    hora_final, minuto_final, segundo_final = lista[1][11:].split(":")
-                    hora_termino = int(hora_final) *60 + int(minuto_final) + (int (segundo_final)/ 60)
-                    if lista[0][:10] != lista[1][:10]:
-                        hora_termino += 24*60
-                    tiempo_viaje_total = hora_termino - hora_inicial  
-                    catalogo["medios_de_pago"][each["payment_type"]] = catalogo["medios_de_pago"][each["payment_type"]] + 1
-                    catalogo["medios_de_pago"][each["payment_type"]]["precio_total"] += each["total_amount"]
-                    catalogo["medios_de_pago"][each["payment_type"]]["tiempo_promedio"] += tiempo_viaje_total
-                else:
-                    lista = [each["pickup_datetime"], each["dropoff_datetime"]]
-                    hora, minuto , segundo = lista[0][11:].split(":")
-                    hora_inicial = int(hora) *60 + int(minuto) + (int (segundo) / 60)
-                    hora_final, minuto_final, segundo_final = lista[1][11:].split(":")
-                    hora_termino = int(hora_final) *60 + int(minuto_final) + (int (segundo_final)/ 60)
-                    if lista[0][:10] != lista[1][:10]:
-                        hora_termino += 24*60
-                    tiempo_viaje_total = hora_termino - hora_inicial  
-                    
-                    catalogo["medios_de_pago"][each["payment_type"]] = {"tipo_de_pago": each["payment_type"], "cantidad_trayectos": 1,"precio_total": each["total_amount"], "mas_usado": False, "mayor_recaudacion": False, "tiempo_promedio": tiempo_viaje_total}
-                    
-            #Ingresar los promedios de los valores de cada uno 
-            #Sacar cual es el mayor uso de pago y el que mas recaudo
-            #Ingresarlo al diccionario y devolvelo al final 
+                diccionario2[barrio_final] ={
+                    "suma": 1,
+                    "barrio" : barrio_final
+                }
             
-    # TODO: Modificar el requerimiento 6
-    pass
+            llave = i["payment_type"]
+            if llave in diccionario["medios_de_pago"]:
+                tiempo = i["dropoff_datetime"]
+                tiempo = tiempo[11:]
+                tiempo = tiempo.split(":")
+                hora, minuto, segundo = int(tiempo[0]), int(tiempo[1]), int(tiempo[2])
+                minutos_totales = hora * 60 + minuto + (segundo / 60)
+                diccionario["medios_de_pago"][llave]["cantidad_trayectos"] += 1
+                diccionario["medios_de_pago"][llave]["precio_promedio"] += float(i["total_amount"])
+                diccionario["medios_de_pago"][llave]["tiempo_promedio"] += minutos_totales
+            else:
+                tiempo = i["dropoff_datetime"]
+                tiempo = tiempo[11:]
+                tiempo = tiempo.split(":")
+                hora, minuto, segundo = int(tiempo[0]), int(tiempo[1]), int(tiempo[2])
+                minutos_totales = hora * 60 + minuto + (segundo / 60)
+                diccionario["medios_de_pago"][llave] = {
+                        "cantidad_trayectos" : 1,
+                        "precio_promedio": float(i["total_amount"]),
+                        "tiempo_promedio" : minutos_totales,
+                        "medio": llave 
+                    }
+                
+    #Arregla la busqueda del barrio con mayor suma 
+    frecuente = 0 
+    if not diccionario2:
+        diccionario["nombre_barrio_final"] = None
+    else:
+        frecuente = None  # guardará el dict {"suma": X, "barrio": "Nombre"}
+        for _, data in diccionario2.items():
+            if frecuente is None or data["suma"] > frecuente["suma"]:
+                frecuente = data
+    diccionario["nombre_barrio_final"] = frecuente["barrio"]
+    
+    diccionario["distancia_promedio"] = diccionario["distancia_promedio"] / diccionario["numero_viajes_totales"]
+    diccionario["tiempo_promedio"] = diccionario["tiempo_promedio"] / diccionario["numero_viajes_totales"]
+    mayor_frecuencia = None
+    max_frec = 0
+    mas_recaudado = None
+    max_recaudo = 0
+    for i in diccionario["medios_de_pago"]:
+        if diccionario["medios_de_pago"][i]["cantidad_trayectos"] > max_frec:
+            max_frec = diccionario["medios_de_pago"][i]["cantidad_trayectos"]
+            mayor_frecuencia = (i, max_frec)
+        if diccionario["medios_de_pago"][i]["precio_promedio"] > max_recaudo:
+            max_recaudo = diccionario["medios_de_pago"][i]["precio_promedio"]
+            mas_recaudado = (i, max_recaudo)
+    diccionario["medio_pago_mas_frecuente"] = mayor_frecuencia
+    diccionario["medio_pago_mas_recaudado"] = mas_recaudado
+    del diccionario["medios_de_pago"]
+    tiempo_final = get_time()
+    tiempo_ejecucion = delta_time(tiempo_inicial,tiempo_final)
+    diccionario["tiempo_ejecucion"] = tiempo_ejecucion
+    return diccionario 
 
 
 def req_7(catalog):
