@@ -389,7 +389,7 @@ def req_3(catalog,valor_menor, valor_mayor):
         "fecha_promedio": {}
         }
     
-    for taxi in catalog["taxis_info"]:
+    for taxi in catalog["taxis_info"]["elements"]:
         lista = []
         if (float(taxi["total_amount"])) >= float(valor_menor) and (float(taxi["total_amount"])) <= float(valor_mayor):
             contador["numero_viajes"] +=1

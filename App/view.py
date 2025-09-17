@@ -66,6 +66,10 @@ def print_req_3(control):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
+    valor_menor = float(input("Por favor ingrese el valor minimo del viaje: "))
+    valor_mayor = float(input("Por favor ingrese el valor maximo del viaje"))
+    resultado = logic.req_3(control,valor_menor,valor_mayor)
+    return print(resultado)
     # TODO: Imprimir el resultado del requerimiento 3
     pass
 
