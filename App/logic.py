@@ -721,7 +721,7 @@ def req_5(catalog, filter, fecha_ini, fecha_fin):
     return {
         "tiempo_ms": fin-inicio,
         "total_trayectos_filtrados": total_filtered,
-        "franja_horaria": "["+str(chosed_h) + "-" +str(chosed_h+1) +")",
+        "franja_horaria": "["+str(chosed_h) + "-" +str(chosed_h+1) +"]",
         "costo_promedio": stats["sum_cost"] / count,
         "numero_trayectos": count,
         "duracion_promedio": stats["sum_dur"] / count,
