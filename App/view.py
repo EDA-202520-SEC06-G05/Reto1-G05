@@ -49,7 +49,7 @@ def print_req_1(control):
     result = logic.req_1(control, pasajeros)
     return print(result)
     # TODO: Imprimir el resultado del requerimiento 1
-
+    pass
 
 
 def print_req_2(control):
@@ -60,6 +60,7 @@ def print_req_2(control):
     result = logic.req_2(control, metodo_p)
     return print(result)
     # TODO: Imprimir el resultado del requerimiento 2
+    pass
 
 
 def print_req_3(control):
@@ -88,6 +89,7 @@ def print_req_5(control):
     resultado = logic.req_5(control,filtro,fecha_ini,fecha_fin)
     return print(resultado)
     # TODO: Imprimir el resultado del requerimiento 5
+    pass
 
 
 def print_req_6(control):
