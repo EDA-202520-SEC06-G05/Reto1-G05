@@ -74,6 +74,11 @@ def print_req_4(control):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
+    filtro = str(input("Por favor ingrese su filtro (MAYOR-MENOR): "))
+    fecha_ini = str(input("Ahora ingrese la fecha Inicial (Debe estar en formato %Y-%m-%d): "))
+    fecha_fin = str(input("Ahora ingrese la fecha final (Debe estar en formato %Y-%m-%d): "))
+    resultado = logic.req_4(control,fecha_ini,fecha_fin,filtro)
+    return print(resultado)
     # TODO: Imprimir el resultado del requerimiento 4
     pass
 

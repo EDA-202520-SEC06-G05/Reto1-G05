@@ -449,7 +449,7 @@ def req_3(catalog,valor_menor, valor_mayor):
 
 def barrios(catalog):
     barrios = lt.new_list()
-    for each in catalog["Neighborhoods"]:
+    for each in catalog["Neighborhoods"]["elements"]:
         sub_barrios= {
             "neighborhood": each["neighborhood"],
             "latitude": each["latitude"],
@@ -478,9 +478,9 @@ def barrios(catalog):
             "north":  None,
             "south": None
         }
-        for sub in sub_barrios:
-            latitud = float(sub["latitude"])
-            longitud = float(sub["longitude"])
+        for sub in sub_barrios["elements"]:
+            latitud = float(sub["latitude"].replace(",", "."))
+            longitud = float(sub["longitude"].replace(",", "."))
             if coordenadas["north"] ==  None:
                 coordenadas["north"] = latitud
             elif coordenadas["north"] < latitud:
@@ -526,73 +526,71 @@ def req_4(catalog, fecha_ini, fecha_fin, filtro):
         
         }
     barrios_filtrados = barrios(catalog)
-    for i in catalog["taxis_info"]:
+    for i in catalog["taxis_info"]["elements"]:
         lista_inicio = []
         lista_final = []
         fecha_inicial = i["pickup_datetime"]
         fecha_inicial = fecha_inicial[:10]
         if fecha_ini <= fecha_inicial <= fecha_fin:
             diccionario["numero_viajes_totales"] +=1
-            latitud = float(i["pickup_latitude"])
-            longitud = float(i["pickup_longitude"])
-            latitud_llegada = float(i["dropoff_latitude"])
-            longitud_llegada = float(i["dropoff_longitude"])
+            latitud = float(i["pickup_latitude"].replace(",", "."))
+            longitud = float(i["pickup_longitude"].replace(",", "."))
+            latitud_llegada = float(i["dropoff_latitude"].replace(",", "."))
+            longitud_llegada = float(i["dropoff_longitude"].replace(",", "."))
             if barrios_filtrados["Manhattan"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Manhattan"]["elements"][0]["east"] and barrios_filtrados["Manhattan"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Manhattan"]["elements"][0]["north"]:
-                for each in barrios_filtrados["Manhattan"]["elements"][1]:
-                    latitud_barrio = float(each["latitude"])
-                    longitud_barrio = float(each["longitude"])
+                for each in barrios_filtrados["Manhattan"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
                     distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
                     lista_inicio.append((each["neighborhood"], distancia))
                     ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
                     lista_final.append((each["neighborhood"], ditancia_llegada))
             elif barrios_filtrados["Brooklyn"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Brooklyn"]["elements"][0]["east"] and barrios_filtrados["Brooklyn"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Brooklyn"]["elements"][0]["north"]:
-                for each in barrios_filtrados["Brooklyn"]["elements"][1]:
-                    latitud_barrio = float(each["latitude"])
-                    longitud_barrio = float(each["longitude"])
+                for each in barrios_filtrados["Brooklyn"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
                     distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
                     lista_inicio.append((each["neighborhood"], distancia))
                     ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
                     lista_final.append((each["neighborhood"], ditancia_llegada))
             elif barrios_filtrados["Queens"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Queens"]["elements"][0]["east"] and barrios_filtrados["Queens"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Queens"]["elements"][0]["north"]:
-                for each in barrios_filtrados["Queens"]["elements"][1]:
-                    latitud_barrio = float(each["latitude"])
-                    longitud_barrio = float(each["longitude"])
+                for each in barrios_filtrados["Queens"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
                     distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
                     lista_inicio.append((each["neighborhood"], distancia))
                     ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
                     lista_final.append((each["neighborhood"], ditancia_llegada))
             elif barrios_filtrados["Bronx"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Bronx"]["elements"][0]["east"] and barrios_filtrados["Bronx"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Bronx"]["elements"][0]["north"]:
-                for each in barrios_filtrados["Bronx"]["elements"][1]:
-                    latitud_barrio = float(each["latitude"])
-                    longitud_barrio = float(each["longitude"])
+                for each in barrios_filtrados["Bronx"]["elements"][1]["elements"]:
+
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
                     distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
                     lista_inicio.append((each["neighborhood"], distancia))
                     ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
                     lista_final.append((each["neighborhood"], ditancia_llegada))
             elif barrios_filtrados["Staten Island"]["elements"][0]["west"] <= longitud <= barrios_filtrados["Staten Island"]["elements"][0]["east"] and barrios_filtrados["Staten Island"]["elements"][0]["south"] <= latitud <= barrios_filtrados["Staten Island"]["elements"][0]["north"]:
-                for each in barrios_filtrados["Staten Island"]["elements"][1]:
-                    latitud_barrio = float(each["latitude"])
-                    longitud_barrio = float(each["longitude"])
+                for each in barrios_filtrados["Staten Island"]["elements"][1]["elements"]:
+                    latitud_barrio = float(each["latitude"].replace(",", "."))
+                    longitud_barrio = float(each["longitude"].replace(",", "."))
                     distancia = harvesine_miles(latitud, longitud, latitud_barrio, longitud_barrio)
                     lista_inicio.append((each["neighborhood"], distancia))
                     ditancia_llegada = harvesine_miles(latitud_llegada, longitud_llegada, latitud_barrio, longitud_barrio)
                     lista_final.append((each["neighborhood"], ditancia_llegada))
-            
-            p = 0
-            menor = 0
+            if len(lista_inicio) == 0 or len(lista_final) == 0:
+                continue
+            menor = lista_inicio[0]     
+            p = 1
             while p < len(lista_inicio):
-                if lista_inicio[p][1] == 0:
-                    menor = lista_inicio[p]
-                elif menor[1] > lista_inicio[p][1]:
+                if lista_inicio[p][1] < menor[1]:
                     menor = lista_inicio[p]
                 p += 1
             barrio_inicio = menor[0]
-            j = 0
-            menor_1 = 0
+            menor_1 = lista_final[0]
+            j = 1
             while j < len(lista_final):
-                if lista_final[j][1] == 0:
-                    menor_1 = lista_final[j]
-                elif menor_1[1] > lista_final[j][1]:
+                if lista_final[j][1] < menor_1[1]:
                     menor_1 = lista_final[j]
                 j += 1
             barrio_final = menor_1[0]
