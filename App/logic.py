@@ -54,54 +54,55 @@ def load_taxis(catalog):
     taxi_file = data_dir + "/taxis-large.csv"
     input_file = csv.DictReader(open(taxi_file, encoding="utf-8"), delimiter=",")
     for taxi in input_file:
-        add_taxi(catalog, taxi)
-        trip_total += 1
+        if taxi and "pickup_datetime" in taxi and "dropoff_datetime" in taxi:
+            add_taxi(catalog, taxi)
+            trip_total += 1
         
-        pick_up = taxi["pickup_datetime"]
-        dropoff = taxi["dropoff_datetime"]
-        start = pick_up[11:16]
-        finish = dropoff[11:16]
+            pick_up = taxi["pickup_datetime"]
+            dropoff = taxi["dropoff_datetime"]
+            start = pick_up[11:16]
+            finish = dropoff[11:16]
         
-        h1str, m1str = start.split(":")
-        h2str, m2str = finish.split(":")
+            h1str, m1str = start.split(":")
+            h2str, m2str = finish.split(":")
         
-        h1, m1 = int(h1str), int(m1str)
-        h2, m2 = int(h2str), int(m2str)
+            h1, m1 = int(h1str), int(m1str)
+            h2, m2 = int(h2str), int(m2str)
         
-        duration = (h2 *60 + m2) - (h1 *60 + m1)
-        if duration < 0:
-            duration += 24*60
+            duration = (h2 *60 + m2) - (h1 *60 + m1)
+            if duration < 0:
+                duration += 24*60
         
-        distance = float(taxi["trip_distance"])
-        cost = float(taxi["total_amount"])
+            distance = float(taxi["trip_distance"])
+            cost = float(taxi["total_amount"])
         
-        register = {
-            "pickup_datetime": pick_up,
-            "dropoff_datetime": dropoff,
-            "duration_min": duration,
-            "distance": distance,
-            "cost": cost    
-        }
+            register = {
+                "pickup_datetime": pick_up,
+                "dropoff_datetime": dropoff,
+                "duration_min": duration,
+                "distance": distance,
+                "cost": cost    
+            }
         
-        if lt.size(first5) < 5:
-            lt.add_last(first5, register)
+            if lt.size(first5) < 5:
+                lt.add_last(first5, register)
         
-        lt.add_last(last5, register)
-        if lt.size(last5) > 5:
-            lt.remove_first(last5)
+            lt.add_last(last5, register)
+            if lt.size(last5) > 5:
+                lt.remove_first(last5)
         
-        if distance > 0:
-            if min_trip is None or distance < min_trip["distancia"]:
-                min_trip = {
+            if distance > 0:
+                if min_trip is None or distance < min_trip["distancia"]:
+                    min_trip = {
+                        "pickup_datetime": pick_up,
+                        "distancia": distance,
+                        "cost": cost
+                    }
+            if max_trip is None or distance > max_trip["distancia"]:
+                max_trip = {
                     "pickup_datetime": pick_up,
                     "distancia": distance,
                     "cost": cost
-                }
-        if max_trip is None or distance > max_trip["distancia"]:
-            max_trip = {
-                "pickup_datetime": pick_up,
-                "distancia": distance,
-                "cost": cost
             }
     fin = get_time()
     result = {
@@ -137,7 +138,8 @@ def add_taxi(catalog, taxi):
         taxi["dropoff_latitude"], 
         taxi["payment_type"],
         taxi["fare_amount"], 
-        taxi["extra"], taxi["mta_tax"],
+        taxi["extra"], 
+        taxi["mta_tax"],
         taxi["tip_amount"], 
         taxi["tolls_amount"], 
         taxi["improvement_surcharge"],
@@ -152,6 +154,7 @@ def new_neigh(borough, neighbor, lat, longi):
             "longitude": longi}
     
     return neigh
+
 
 def new_taxi_info(pickup, dropoff, passenger_count, trip_dist, 
                   pickup_longitude, pickup_latitude, rate_code, drop_long, drop_lat, payment, fare, extra, mta_tax, tip, tolls, improve, total):
@@ -206,8 +209,10 @@ def req_1(catalog, pasajeros):
     conteo_metodos_pago={}
     conteo_fechas_inicio={}
 
-    for viaje in catalog["taxis_info"]:
-        if viaje["passenger_count"]!="" and int(float(viaje["passenger_count"]))== pasajeros:
+    for i in range(0,lt.size(catalog["taxis_info"])):
+        viaje = lt.get_element(catalog["taxis_info"], i)
+        pc = int(viaje["passenger_count"])
+        if (pc != 0) and (pc == pasajeros):
             contador+=1
             pickup= viaje["pickup_datetime"]
             dropoff= viaje["dropoff_datetime"]
@@ -276,7 +281,6 @@ def req_1(catalog, pasajeros):
     return resultado
 
     # TODO: Modificar el requerimiento 1
-    pass
 
 
 def req_2(catalog, filtro):
@@ -290,12 +294,14 @@ def req_2(catalog, filtro):
     propina = 0  
     fechas = {}
     
-    for each in catalog["taxis_info"]:        
-        if each["payment_method"] == filtro:
+    for each in range(0,lt.size(catalog["taxis_info"])):
+        metodo = lt.get_element(catalog["taxis_info"],each)
+        pm = str(metodo["payment_type"])        
+        if pm == filtro:
             contador += 1
             
-            pickup = each["pickup_datetime"]
-            dropoff = each["dropoff_datetime"]
+            pickup = metodo["pickup_datetime"]
+            dropoff = metodo["dropoff_datetime"]
             start = pickup[11:16]
             finish = dropoff[11:16]
             h1str , m1str = start.split(":")
@@ -305,12 +311,12 @@ def req_2(catalog, filtro):
             duration_sum = (h2 *60 + m2) - (h1 *60 + m1)
             duration += duration_sum
             
-            total_costs += float(each["total_amount"]) 
-            distancia += float(each["trip_distance"]) 
-            peajes += float(each["tolls_amount"])
-            propina += float(each["tip_amount"])
+            total_costs += float(metodo["total_amount"]) 
+            distancia += float(metodo["trip_distance"]) 
+            peajes += float(metodo["tolls_amount"])
+            propina += float(metodo["tip_amount"])
             
-            num_pasajeros = int(each["passenger_count"])
+            num_pasajeros = int(metodo["passenger_count"])
             if num_pasajeros in pasajeros:
                 pasajeros[num_pasajeros]+=1
             else:
@@ -556,7 +562,7 @@ def req_5(catalog, filter, fecha_ini, fecha_fin):
     hours = {}
     total_filtered = 0
     
-    for i in range(1, lt.size(catalog["taxis_info"])+1):
+    for i in range(0, lt.size(catalog["taxis_info"])):
         trip = lt.get_element(catalog["taxis_info"], i)
         
         pickup = trip["pickup_datetime"]
@@ -628,7 +634,6 @@ def req_5(catalog, filter, fecha_ini, fecha_fin):
     
     
     # TODO: Modificar el requerimiento 5
-    pass
 
 def req_6(catalog, fecha_ini, fecha_fin, barrio):
     """
