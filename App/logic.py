@@ -6,7 +6,7 @@ import math
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/Challenge-1'
 
-def new_logic(data_structure):
+def new_logic():
     """
     Crea el catalogo para almacenar las estructuras de datos
     """
@@ -22,7 +22,7 @@ def new_logic(data_structure):
 
 # Funciones para la carga de datos
 
-def load_data(catalog):
+def load_data(catalog, filename):
     """
     Carga los datos del reto
     """
@@ -116,13 +116,8 @@ def load_taxis(catalog):
     return result    
 
 def add_neigh(catalog, neigh):
-    n = new_neigh(
-        neigh["borough"],
-        neigh["neighborhood"],
-        neigh["latitude"],
-        neigh["longitude"]
-        )
-    lt.add_last(catalog["Neighborhoods"], n)
+    n = new_neigh(neigh["borough"], neigh["neighborhood"], neigh["latitude"], neigh["longitude"])
+    lt.add_last(catalog["neighboorhoods"], n)
     return catalog
 
 def add_taxi(catalog, taxi):
@@ -138,8 +133,7 @@ def add_taxi(catalog, taxi):
         taxi["dropoff_latitude"], 
         taxi["payment_type"],
         taxi["fare_amount"], 
-        taxi["extra"], 
-        taxi["mta_tax"],
+        taxi["extra"], taxi["mta_tax"],
         taxi["tip_amount"], 
         taxi["tolls_amount"], 
         taxi["improvement_surcharge"],
@@ -160,22 +154,22 @@ def new_taxi_info(pickup, dropoff, passenger_count, trip_dist,
                   pickup_longitude, pickup_latitude, rate_code, drop_long, drop_lat, payment, fare, extra, mta_tax, tip, tolls, improve, total):
     
     taxi_info = {"pickup_datetime":pickup, 
-                "dropoff_datetime":dropoff, 
-                "passenger_count":passenger_count, 
-                "trip_distance": trip_dist, 
-                "pickup_longitude": pickup_longitude,
-                "pickup_latitude":pickup_latitude, 
-                "rate_code": rate_code, 
-                "dropoff_longitude": drop_long, 
-                "dropoff_latitude": drop_lat, 
-                "payment_type":payment, 
-                "fare_amount":fare,
-                "extra": extra, 
-                "mta_tax": mta_tax, 
-                "tip_amount": tip, 
-                "tolls_amount": tolls, 
-                "improvement_surcharge": improve, 
-                "total_amount":total}
+        "dropoff_datetime":dropoff, 
+        "passenger_count":passenger_count, 
+        "trip_distance": trip_dist, 
+        "pickup_longitude": pickup_longitude,
+        "pickup_latitude":pickup_latitude, 
+        "rate_code": rate_code, 
+        "dropoff_longitude": drop_long, 
+        "dropoff_latitude": drop_lat, 
+        "payment_type":payment, 
+        "fare_amount":fare,
+        "extra": extra, 
+        "mta_tax": mta_tax, 
+        "tip_amount": tip, 
+        "tolls_amount": tolls, 
+        "improvement_surcharge": improve, 
+        "total_amount":total}
     return taxi_info
 
 def neigh_size(catalog):
@@ -185,12 +179,12 @@ def taxi_size(catalog):
     return lt.size(catalog["taxis_info"])
     
 # Funciones de consulta sobre el catálogo    
-
+    
 def get_data(catalog, id):
     """
     Retorna un dato por su ID.
     """
-    #TODO: Consulta en las Llamar la función del modelo para obtener un dato
+        #TODO: Consulta en las Llamar la función del modelo para obtener un dato
     pass
 
 
@@ -201,18 +195,16 @@ def req_1(catalog, pasajeros):
 
     start_time = get_time() 
     contador=0
-    sumatoria_duracion=0
-    sumatoria_costo_total=0
-    sumatoria_distancia=0
-    sumatoria_peajes=0
-    sumatoria_propinas=0
-    conteo_metodos_pago={}
-    conteo_fechas_inicio={}
+    duracion=0
+    costo_total=0
+    distancia=0
+    peajes=0
+    propina=0
+    metodos_pago={}
+    fechas={}
 
-    for i in range(0,lt.size(catalog["taxis_info"])):
-        viaje = lt.get_element(catalog["taxis_info"], i)
-        pc = int(viaje["passenger_count"])
-        if (pc != 0) and (pc == pasajeros):
+    for viaje in catalog["taxis_info"]:
+        if viaje["passenger_count"]!="" and int(float(viaje["passenger_count"]))== pasajeros:
             contador+=1
             pickup= viaje["pickup_datetime"]
             dropoff= viaje["dropoff_datetime"]
@@ -225,43 +217,43 @@ def req_1(catalog, pasajeros):
             duracion_sum= (h2*60+m2)-(h1*60+m1)
             if duracion_sum<0:
                 duracion_sum+=24*60
-            sumatoria_duracion += duracion_sum
+            duracion += duracion_sum
 
-            sumatoria_costo_total+= float(viaje["total_amount"])
-            sumatoria_distancia+= float(viaje["trip_distance"])
-            sumatoria_peajes+= float(viaje["tolls_amount"])
-            sumatoria_propinas+= float(viaje["tip_amount"])
+            costo_total+= float(viaje["total_amount"])
+            distancia+= float(viaje["trip_distance"])
+            peajes+= float(viaje["tolls_amount"])
+            propina+= float(viaje["tip_amount"])
 
             metodo_pago=viaje["payment_type"]
-            if metodo_pago in conteo_metodos_pago:
-                conteo_metodos_pago[metodo_pago]+=1
+            if metodo_pago in metodos_pago:
+                metodos_pago[metodo_pago]+=1
             else:
-                conteo_metodos_pago[metodo_pago]=1
+                metodos_pago[metodo_pago]=1
 
             fecha=pickup[0:10] 
-            if fecha in conteo_fechas_inicio:
-                conteo_fechas_inicio[fecha]+=1
+            if fecha in fechas:
+                fechas[fecha]+=1
             else:
-                conteo_fechas_inicio[fecha]=1
+                fechas[fecha]=1
     if contador>0:
-        duracion=sumatoria_duracion/contador
-        costo_total=sumatoria_costo_total/contador
-        distancia=sumatoria_distancia/contador
-        peajes=sumatoria_peajes/contador
-        propina=sumatoria_propinas/contador
+        duracion=duracion/contador
+        costo_total=costo_total/contador
+        distancia=distancia/contador
+        peajes=peajes/contador
+        propina=propina/contador
     else:
         duracion=costo_total=distancia=peajes=propina=0
     metodo_frec=None
-    cantidad_maxima=-1
-    for metodo in conteo_metodos_pago:
-        cantidad =conteo_metodos_pago[metodo]
-        if cantidad >cantidad_maxima:
-            cantidad_maxima=cantidad
+    cantidad_max=-1
+    for metodo in metodos_pago:
+        cantidad =metodos_pago[metodo]
+        if cantidad >cantidad_max:
+            cantidad_max=cantidad
             metodo_frec=str(metodo)+" - "+str(cantidad)
     fecha_frec=None
     max_fecha=-1
-    for fecha in conteo_fechas_inicio:
-        cantidad=conteo_fechas_inicio[fecha]
+    for fecha in fechas:
+        cantidad=fechas[fecha]
         if cantidad>max_fecha:
             max_fecha=cantidad
             fecha_frec=fecha
@@ -283,86 +275,16 @@ def req_1(catalog, pasajeros):
     # TODO: Modificar el requerimiento 1
 
 
-def req_2(catalog, filtro):
+                 
+    
+    
 
-    contador = 0
-    duration = 0
-    total_costs = 0
-    distancia = 0
-    peajes = 0
-    pasajeros = {}
-    propina = 0  
-    fechas = {}
-    
-    for each in range(0,lt.size(catalog["taxis_info"])):
-        metodo = lt.get_element(catalog["taxis_info"],each)
-        pm = str(metodo["payment_type"])        
-        if pm == filtro:
-            contador += 1
-            
-            pickup = metodo["pickup_datetime"]
-            dropoff = metodo["dropoff_datetime"]
-            start = pickup[11:16]
-            finish = dropoff[11:16]
-            h1str , m1str = start.split(":")
-            h2str, m2str = finish.split(":")
-            h1 , m1 = int(h1str), int(m1str)
-            h2, m2 = int(h2str), int(m2str)
-            duration_sum = (h2 *60 + m2) - (h1 *60 + m1)
-            duration += duration_sum
-            
-            total_costs += float(metodo["total_amount"]) 
-            distancia += float(metodo["trip_distance"]) 
-            peajes += float(metodo["tolls_amount"])
-            propina += float(metodo["tip_amount"])
-            
-            num_pasajeros = int(metodo["passenger_count"])
-            if num_pasajeros in pasajeros:
-                pasajeros[num_pasajeros]+=1
-            else:
-                pasajeros[num_pasajeros] = 1
-                
-            fecha = dropoff[0:10]
-            if fecha in fechas:
-                fechas[fecha] += 1
-            else: 
-                fechas[fecha] = 1
-    
-    if contador > 0:
-        duration = duration / contador
-        total_costs = total_costs / contador
-        distancia = distancia / contador
-        peajes = peajes / contador
-        propina = propina / contador
         
-    pasajero_frec = None
-    cantidad_max = -1 
-    for num_pasajeros in pasajeros:
-        cantidad = pasajeros[num_pasajeros]
-        if cantidad > cantidad_max:
-            cantidad_max = cantidad
-            pasajero_frec = str(num_pasajeros)+ "-"+ str(cantidad)
     
-    fecha_frec = None
-    max_fecha = -1
-    for fecha in fechas:
-        cantidad = fechas[fecha]
-        if cantidad > max_fecha:
-            max_fecha = cantidad
-            fecha_frec = fecha 
-                
-    resultado = {
-        "total_trayectos": contador,
-        "duración_promedio(min)": duration,
-        "costo_total_promedio": total_costs,
-        "distancia_promedio_millas": distancia,
-        "peajes_promedio": peajes,
-        "pasajeros_mas_frecuente": pasajero_frec,
-        "propina_promedio": propina,
-        "fecha_finalizacion": fecha_frec  
-    }        
-    return resultado
+    
 
+
+def req_2(catalog):
     """
     Retorna el resultado del requerimiento 2
     """   
@@ -370,7 +292,7 @@ def req_2(catalog, filtro):
 
 
 
-def req_3(catalog,valor_menor, valor_mayor):
+def req_3(catalog):
     """
     Retorna el resultado del requerimiento 3
     """
@@ -446,19 +368,9 @@ def req_3(catalog,valor_menor, valor_mayor):
     # TODO: Modificar el requerimiento 3
     pass
 
-def harvesine_miles(lat1, lon1, lat2, lon2):
-    R = 3958.8
-    lat1 = lat1 * math.pi / 180
-    lon1 = lon1 * math.pi / 180
-    lat2 = lat2 * math.pi / 180
-    lon2 = lon2 * math.pi / 180
-    dlat = lat2 - lat1
-    dlon = lon2 - lon1
-    a = (math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2) **2)
-    c = 2 * math.asin(math.sqrt(a))
-    return R * c
-    
-def req_4(catalog, fecha_ini, fecha_fin, filtro):
+
+def req_4(catalog, filtro, fecha_inicio, fecha_final):
+
     """
     Retorna el resultado del requerimiento 4
     """
@@ -554,7 +466,7 @@ def req_4(catalog, fecha_ini, fecha_fin, filtro):
     pass
 
 
-def req_5(catalog, filter, fecha_ini, fecha_fin):
+def req_5(catalog):
     """
     Retorna el resultado del requerimiento 5
     """
@@ -634,6 +546,7 @@ def req_5(catalog, filter, fecha_ini, fecha_fin):
     
     
     # TODO: Modificar el requerimiento 5
+    pass
 
 def req_6(catalog, fecha_ini, fecha_fin, barrio):
     """
