@@ -32,7 +32,6 @@ def load_data(catalog):
     return taxi , neigh
 
     # TODO: Realizar la carga de datos
-    pass
 
 def load_neigh(catalog):
     neigh_file = data_dir + "/nyc-neighborhoods.csv"

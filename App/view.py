@@ -29,6 +29,7 @@ def load_data(control):
     Carga los datos
     """
     neighbourhoods, taxis = logic.load_data(control)
+    print("\n=== DATOS CARGADOS 1 ===")
     return print(neighbourhoods, taxis)
     #TODO: Realizar la carga de datos
 
