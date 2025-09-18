@@ -186,12 +186,6 @@ def taxi_size(catalog):
     
 # Funciones de consulta sobre el catálogo    
 
-def get_data(catalog, id):
-    """
-    Retorna un dato por su ID.
-    """
-    #TODO: Consulta en las Llamar la función del modelo para obtener un dato
-    pass
 
 
 def req_1(catalog, pasajeros):
