@@ -45,9 +45,18 @@ def print_req_1(control):
         Función que imprime la solución del Requerimiento 1 en consola
     
     """
-    pasajeros = int(input("Por favor ingrese la cantidad de pasajeros:"))
-    result = logic.req_1(control, pasajeros)
-    return print(result)
+    pasajeros = int(input("Por favor ingrese la cantidad de pasajeros: "))
+    resultado = logic.req_1(control, pasajeros)
+    print("\n=== RESULTADO REQ 1 ===")
+    print(f"Tiempo de ejecución: {resultado['tiempo_ejecucion_ms']} ms")
+    print(f"Total trayectos: {resultado['total_trayectos']}")
+    print(f"Duración promedio (min): {resultado['duracion_promedio(min)']}")
+    print(f"Costo total promedio: {resultado['costo_total_promedio']}")
+    print(f"Distancia promedio (millas): {resultado['distancia_promedio_millas']}")
+    print(f"Peajes promedio: {resultado['peajes_promedio']}")
+    print(f"Propina promedio: {resultado['propina_promedio']}")
+    print(f"Método de pago más usado: {resultado['metodo_pago_mas_usado']}")
+    print(f"Fecha inicio más frecuente: {resultado['fecha_inicio_mas_frecuente']}\n")
     # TODO: Imprimir el resultado del requerimiento 1
 
 
@@ -56,9 +65,17 @@ def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    metodo_p = str(input("Ingrese el metodo de pago:"))
-    result = logic.req_2(control, metodo_p)
-    return print(result)
+    metodo_p = str(input("Ingrese el método de pago: "))
+    resultado = logic.req_2(control, metodo_p)
+    print("\n=== RESULTADO REQ 2 ===")
+    print(f"Total trayectos: {resultado['total_trayectos']}")
+    print(f"Duración promedio (min): {resultado['duración_promedio(min)']}")
+    print(f"Costo total promedio: {resultado['costo_total_promedio']}")
+    print(f"Distancia promedio (millas): {resultado['distancia_promedio_millas']}")
+    print(f"Peajes promedio: {resultado['peajes_promedio']}")
+    print(f"Propina promedio: {resultado['propina_promedio']}")
+    print(f"Pasajeros más frecuente: {resultado['pasajeros_mas_frecuente']}")
+    print(f"Fecha finalización más frecuente: {resultado['fecha_finalizacion']}\n")
     # TODO: Imprimir el resultado del requerimiento 2
 
 
@@ -91,11 +108,21 @@ def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
-    filtro = str(input("Por favor ingrese la seleccion de costo: "))
-    fecha_ini = str(input("Ahora ingrese la fecha Inicial (Debe estar en formato %Y-%m-%d): "))
-    fecha_fin = str(input("Ahora ingrese la fecha final (Debe estar en formato %Y-%m-%d): "))
-    resultado = logic.req_5(control,filtro,fecha_ini,fecha_fin)
-    return print(resultado)
+    filtro = str(input("Por favor ingrese la selección de costo (MAYOR/MENOR): "))
+    fecha_ini = str(input("Ahora ingrese la fecha inicial (formato %Y-%m-%d): "))
+    fecha_fin = str(input("Ahora ingrese la fecha final (formato %Y-%m-%d): "))
+    resultado = logic.req_5(control, filtro, fecha_ini, fecha_fin)
+    print("\n=== RESULTADO REQ 5 ===")
+    print(f"Tiempo de ejecución: {resultado['tiempo_ms']} ms")
+    print(f"Total trayectos filtrados: {resultado['total_trayectos_filtrados']}")
+    print(f"Franja horaria: {resultado['franja_horaria']}")
+    print(f"Costo promedio: {resultado['costo_promedio']}")
+    print(f"Número de trayectos: {resultado['numero_trayectos']}")
+    print(f"Duración promedio: {resultado['duracion_promedio']}")
+    print(f"Pasajeros promedio: {resultado['pasajeros_promedio']}")
+    print(f"Costo mayor: {resultado['costo_mayor']}")
+    print(f"Costo menor: {resultado['costo_menor']}\n")
+    
     # TODO: Imprimir el resultado del requerimiento 5
 
 
