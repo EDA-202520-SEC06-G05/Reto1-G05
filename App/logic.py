@@ -1004,9 +1004,6 @@ def req_6(catalog, fecha_ini, fecha_fin, barrio):
     diccionario["tiempo_ejecucion"] = time_total
     return diccionario
     
-    
-    
-    
 
 
 def req_7(catalog):
