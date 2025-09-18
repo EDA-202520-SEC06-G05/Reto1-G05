@@ -65,7 +65,7 @@ def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    metodo_p = str(input("Ingrese el método de pago: "))
+    metodo_p = str(input("Ingrese el método de pago: ")).upper()
     resultado = logic.req_2(control, metodo_p)
     print("\n=== RESULTADO REQ 2 ===")
     print(f"Total trayectos: {resultado['total_trayectos']}")
@@ -84,24 +84,40 @@ def print_req_3(control):
         Función que imprime la solución del Requerimiento 3 en consola
     """
     valor_menor = float(input("Por favor ingrese el valor minimo del viaje: "))
-    valor_mayor = float(input("Por favor ingrese el valor maximo del viaje"))
+    valor_mayor = float(input("Por favor ingrese el valor maximo del viaje: "))
     resultado = logic.req_3(control,valor_menor,valor_mayor)
-    return print(resultado)
+    print("\n=== RESULTADO REQ 5 ===")
+    print(f"Tiempo de ejecucion: {resultado["tiempo_ejecucion"]}")
+    print(f"Numero total de trayectos: {resultado["numero_viajes"]}")
+    print(f"Tiempo prom de los trayectos(min): {resultado["tiempo_promedio"]}")
+    print(f"Precio total promedio: {resultado["precio_promedio_usd"]}")
+    print(f"Distancia promedio de los trayectos (Millas): {resultado["disatancia_total_promedio"]}")
+    print(f"Precio promedio pagado en peajes: {resultado["precio_peaje_promedio"]}")
+    print(f"Numero y cantidad de pasajeros más frecuente: {resultado["cantidad_pasajeros_frecuente"]}")
+    print(f"Cantidad de propina promedio pagada: {resultado["cantidad_propinas_promedio"]}")
+    print(f"Fecha finalizacion trayecto con mayor frec: {resultado["fecha_promedio"]}")
     # TODO: Imprimir el resultado del requerimiento 3
-    pass
 
 
 def print_req_4(control):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
-    filtro = str(input("Por favor ingrese su filtro (MAYOR-MENOR): "))
+    filtro = str(input("Por favor ingrese su filtro (MAYOR-MENOR): ")).upper()
     fecha_ini = str(input("Ahora ingrese la fecha Inicial (Debe estar en formato %Y-%m-%d): "))
     fecha_fin = str(input("Ahora ingrese la fecha final (Debe estar en formato %Y-%m-%d): "))
     resultado = logic.req_4(control,fecha_ini,fecha_fin,filtro)
-    return print(resultado)
+    print("\n=== RESULTADO REQ 4 ===")
+    print(f"Tiempo de ejecucion:{resultado["tiempo_ejecucion"]}")
+    print(f"Filtro de selección de costo: {filtro}")
+    print(f"Numero total de trayectos que cumplieron: {resultado["numero_viajes_totales"]}")
+    print(f"Nombre barrio origen: {resultado["barrio_inicio"]}")
+    print(f"Nombre barrio destino: {resultado["barrio_final"]}")
+    print(f"Distancia promedio recorrida en los trayectos: {resultado["distancia_promedio"]}")
+    print(f"Tiempo promedio en los trayectos: {resultado["tiempo_promedio"]}")
+    print(f"Costo total promedio de los trayectos: {resultado["costo_promedio"]}")
     # TODO: Imprimir el resultado del requerimiento 4
-    pass
+
 
 
 def print_req_5(control):
@@ -134,9 +150,15 @@ def print_req_6(control):
     fecha_ini = str(input("Ahora ingrese la fecha Inicial (Debe estar en formato %Y-%m-%d): "))
     fecha_fin = str(input("Ahora ingrese la fecha final (Debe estar en formato %Y-%m-%d): "))
     resultado = logic.req_6(control,fecha_ini,fecha_fin,barrio)
-    return print (resultado)
+    print("\n=== RESULTADO REQ 6 ===")
+    print(f"Tiempo de ejecución: {resultado["tiempo_ejecucion"]}")
+    print(f"Numero total de trayectos: {resultado["numero_viajes_totales"]}")
+    print(f"Distancia promedio recorrida: {resultado["distancia_promedio"]}")
+    print(f"Tiempo promedio de duración: {resultado["tiempo_promedio"]}")
+    print(f"Nombre del barrio de llegada mas visitado: {resultado["nombre_barrio_final"]}")
+    print(f"Combinaciones de los medios de pago: {resultado["medios_de_pago"]}")
+    
     # TODO: Imprimir el resultado del requerimiento 6
-    pass
 
 
 def print_req_7(control):

@@ -342,7 +342,7 @@ def req_2(catalog, filtro):
         cantidad = pasajeros[num_pasajeros]
         if cantidad > cantidad_max:
             cantidad_max = cantidad
-            pasajero_frec = str(num_pasajeros)+ "-"+ str(cantidad)
+            pasajero_frec = str(num_pasajeros)+ " - "+ str(cantidad)
     
     fecha_frec = None
     max_fecha = -1
@@ -445,7 +445,7 @@ def req_3(catalog,valor_menor, valor_mayor):
     
     for cantidad in contador["cantidad_pasajeros_frecuente"]:
         if contador["cantidad_pasajeros_frecuente"][cantidad] == maximo_pasajeros:
-            contador["cantidad_pasajeros_frecuente"] = str(cantidad) + "-" + str(maximo_pasajeros)
+            contador["cantidad_pasajeros_frecuente"] = str(cantidad) + " - " + str(maximo_pasajeros)
             break
     
     time_end = get_time()
