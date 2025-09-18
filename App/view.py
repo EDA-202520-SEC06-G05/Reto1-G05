@@ -87,7 +87,7 @@ def print_req_3(control):
     valor_menor = float(input("Por favor ingrese el valor minimo del viaje: "))
     valor_mayor = float(input("Por favor ingrese el valor maximo del viaje: "))
     resultado = logic.req_3(control,valor_menor,valor_mayor)
-    print("\n=== RESULTADO REQ 5 ===")
+    print("\n=== RESULTADO REQ 3 ===")
     print(f"Tiempo de ejecucion: {resultado["tiempo_ejecucion"]}")
     print(f"Numero total de trayectos: {resultado["numero_viajes"]}")
     print(f"Tiempo prom de los trayectos(min): {resultado["tiempo_promedio"]}")
