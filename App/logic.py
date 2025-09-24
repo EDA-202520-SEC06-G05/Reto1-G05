@@ -6,7 +6,7 @@ import math
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/Challenge-1'
 
-def new_logic():
+def new_logic(data_structure):
     """
     Crea el catalogo para almacenar las estructuras de datos
     """
@@ -22,7 +22,7 @@ def new_logic():
 
 # Funciones para la carga de datos
 
-def load_data(catalog, filename):
+def load_data(catalog):
     """
     Carga los datos del reto
     """
@@ -116,8 +116,12 @@ def load_taxis(catalog):
     return result    
 
 def add_neigh(catalog, neigh):
-    n = new_neigh(neigh["borough"], neigh["neighborhood"], neigh["latitude"], neigh["longitude"])
-    lt.add_last(catalog["neighboorhoods"], n)
+    n = new_neigh(neigh["borough"],
+                    neigh["neighborhood"],
+                    neigh["latitude"],
+                    neigh["longitude"]
+                    )
+    lt.add_last(catalog["Neighborhoods"], n)
     return catalog
 
 def add_taxi(catalog, taxi):
@@ -466,7 +470,7 @@ def req_4(catalog, filtro, fecha_inicio, fecha_final):
     pass
 
 
-def req_5(catalog):
+def req_5(catalog, fecha_ini , fecha_fin):
     """
     Retorna el resultado del requerimiento 5
     """
@@ -546,7 +550,6 @@ def req_5(catalog):
     
     
     # TODO: Modificar el requerimiento 5
-    pass
 
 def req_6(catalog, fecha_ini, fecha_fin, barrio):
     """
