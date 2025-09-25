@@ -469,6 +469,7 @@ def barrios(catalog):
     lt.add_last(filtro_barrio_grande["Queens"],    lt.sub_list(barrios, 17, 5))   
     lt.add_last(filtro_barrio_grande["Bronx"],     lt.sub_list(barrios, 22, 4))   
     lt.add_last(filtro_barrio_grande["Staten Island"], lt.sub_list(barrios, 26, 4))
+    
     # Sacar la distancia en un plano cartesiano de los barrios para hacer un plano con los 5 cuadrados 
     for each in filtro_barrio_grande:
         lista = filtro_barrio_grande[each]
